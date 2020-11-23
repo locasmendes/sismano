@@ -10,7 +10,7 @@
 </head>
 <body>
 @yield('body')
-<script src="{{ url('js/app.js') }}"></script>
+<script src="http://sismano.herokuapp.com/js/app.js"></script>
 @stack('scripts')
 </body>
 </html>
