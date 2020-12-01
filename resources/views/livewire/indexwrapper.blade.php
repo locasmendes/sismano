@@ -1,7 +1,11 @@
 @if ($action == true)
 <form action="{{ route('logar') }}" method="post">
 @else
-<form action="registrar" method="post">
+<form action="{{ route('criar-conta') }}" method="post">
+    <div class="form-group">
+        <label for="name">Nome</label>
+        <input type="text" id="name" class="form-control" name="name" aria-describedby="name">
+    </div>
 @endif
     @csrf
     <div class="form-group">
@@ -20,11 +24,13 @@
         Criar conta
         @endif
     </button>
-      <a href="#" wire:click="$toggle('action')">
+    <a href="#" wire:click="$toggle('action')">
+      <small>
         @if ($action == true)
         Não tem uma conta? clique aqui para criar uma.
         @else
         Já tem uma conta? clique aqui para entrar.
         @endif
-        </a>
+      </small>
+    </a>
 </form>
