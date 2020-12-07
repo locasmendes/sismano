@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TurmaController;
+use App\Http\Controllers\AlunoController;
+use App\Http\Controllers\NotaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,17 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
-})->name('login');
-
-Route::post('/dologin', 'UserController@doLogin')->name('logar');
-
-Route::post('/doregister', 'UserController@doRegister')->name('criar-conta');
-
-Route::group(['middleware' => 'auth'], function () {
-
-    Route::get('/turmas', 'TurmaController@index')->name('home');
-
-    Route::get('/turmas/{turma}', 'TurmaController@show')->name('turma-view');
+    return view('login');
 });
 
+Route::resource('turmas', TurmaController::class);
+Route::resource('alunos', AlunoController::class);
+Route::post('notas/update', [NotaController::class, 'update'])->name('notas.update');
+Route::get('notas/{disciplinaid}/{alunoid}', function($disciplinaid, $alunoid){
+    return view('notas.edit', ['disciplinaid' => $disciplinaid, 'alunoid' => $alunoid]);
+})->name('notas.edit');

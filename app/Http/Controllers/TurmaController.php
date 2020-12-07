@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Turma;
+use App\Models\Aluno;
+use App\Models\Turma;
 use Illuminate\Http\Request;
 
 class TurmaController extends Controller
 {
-    private $turmas;
-
-    public function __construct()
-    {
-        $this->turmas = Turma::paginate(9);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +15,13 @@ class TurmaController extends Controller
      */
     public function index()
     {
-        return view('livewire.turmas', ['turmas' => $this->turmas]);
+        $turmas = Turma::latest()->paginate(5);
+        foreach($turmas as $key => $turma){
+            $turma->numeroalunos = count(Aluno::where('turmaId', $turma->id)->get());
+        }
+
+        return view('turmas.index', compact('turmas'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -30,7 +31,7 @@ class TurmaController extends Controller
      */
     public function create()
     {
-        //
+        return view('turmas.create');
     }
 
     /**
@@ -41,51 +42,71 @@ class TurmaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'turma' => 'required',
+            'turno' => 'required',
+            'avaliacoes' => 'required'
+        ]);
+
+        Turma::create($request->all());
+
+        return redirect()->route('turmas.index')
+        ->with('success', 'Turma criada com sucesso.');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Turma  $turma
+     * @param  \App\Models\Turma  $turma
      * @return \Illuminate\Http\Response
      */
     public function show(Turma $turma)
     {
-        dd($turma);
+        return view('turmas.show', compact('turma'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Turma  $turma
+     * @param  \App\Models\Turma  $turma
      * @return \Illuminate\Http\Response
      */
     public function edit(Turma $turma)
     {
-        //
+        return view('turmas.edit', compact('turma'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Turma  $turma
+     * @param  \App\Models\Turma  $turma
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Turma $turma)
     {
-        //
-    }
+        $request->validate([
+            'turma' => 'required',
+            'turno' => 'required',
+            'avaliacoes' => 'required'
+        ]);
+
+        $turma->update($request->all());
+
+        return redirect()->route('turmas.index')
+        ->with('success', 'Turma atualizada com sucesso.');    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Turma  $turma
+     * @param  \App\Models\Turma  $turma
      * @return \Illuminate\Http\Response
      */
     public function destroy(Turma $turma)
     {
-        //
-    }
+        $turma->delete();
+
+        return redirect()->route('turmas.index')
+            ->with('success', 'Turma deletada com sucesso');    }
 }
