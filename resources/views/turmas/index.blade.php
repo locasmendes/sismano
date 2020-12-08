@@ -49,17 +49,20 @@
 
                         @csrf
                         @method('DELETE')
-
-                        <button type="submit" style="border: none; background-color:transparent;"
                         @if ($turma->numeroalunos > 0)
+                        <button type="submit" style="border: none; background-color:transparent;"
                             disabled
                             title="Você precisa remover os alunos primeiro"
-                            @else
-                            title="Deletar"
-                        @endif>
-                            <i class="fas fa-trash fa-lg text-danger"></i>
-
+                            >
+                        <i class="fas fa-trash fa-lg text-muted"></i>
                         </button>
+                        @else
+                        <button type="submit" style="border: none; background-color:transparent;"
+                        title="Remover turma"
+                        >
+                    <i class="fas fa-trash fa-lg text-danger"></i>
+                    </button>
+                        @endif
                     </form>
                 </td>
             </tr>
